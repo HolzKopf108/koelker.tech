@@ -1,0 +1,43 @@
+services:
+  koelker-tech_local:
+    image: node:24-bookworm
+    container_name: koelker-tech_local
+    working_dir: /app
+    command: >
+      sh -lc "
+        [ -f .docker-npm.stamp ] || (
+          npm ci --prefer-offline --no-audit --loglevel=warn &&
+          touch .docker-npm.stamp
+        );
+        npm run start
+      "
+    env_file:
+      - .env.local
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "500"
+      WATCHPACK_POLLING: "true"
+      WATCHPACK_POLLING_INTERVAL: "500"
+    volumes:
+      - ./:/app
+      - koelker-tech_local_node_modules:/app/node_modules
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web
+      - traefik.http.routers.koelker-tech_local.rule=Host(`koelker.lan`)
+      - traefik.http.routers.koelker-tech_local.entrypoints=web
+      - traefik.http.services.koelker-tech_local.loadbalancer.server.port=4000
+    networks:
+      - web
+    logging:
+      driver: local
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+volumes:
+  koelker-tech_local_node_modules:
+
+networks:
+  web:
+    external: true

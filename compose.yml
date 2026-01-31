@@ -1,0 +1,27 @@
+services:
+  koelker-tech:
+    image: koelker-tech:latest
+    container_name: koelker-tech
+    restart: unless-stopped
+    expose:
+      - "4000"
+    env_file:
+      - .env.prod
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web
+      - traefik.http.routers.koelker-tech.rule=Host(`koelker.tech`)
+      - traefik.http.routers.koelker-tech.entrypoints=web,websecure
+      - traefik.http.routers.koelker-tech.tls.certresolver=le
+      - traefik.http.services.koelker-tech.loadbalancer.server.port=4000
+    networks:
+      - web
+    logging:
+      driver: local
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+networks:
+  web:
+    external: true

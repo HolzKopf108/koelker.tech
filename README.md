@@ -1,59 +1,171 @@
-# KoelkerTech
+# koelker.tech
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+Minimalistische, animierte persönliche Website auf Basis von Angular.
+Die Seite dient als technische Lernplattform und persönliche Präsenz
+und wird über Docker und Traefik ausgeliefert.
 
-## Development server
+---
 
-To start a local development server, run:
+## Ziel der Website
 
+- Minimalistisches Design
+- Dezente Animationen
+- Einsatz von Angular zum Lernen und für reale Projekte
+- Server-Side Rendering (SSR)
+- Betrieb hinter Traefik (lokal und produktiv)
+- Manuelles Deployment ohne CI/CD
+
+---
+
+## Lokale Entwicklung (Angular Dev Server)
+
+### Voraussetzungen
+
+- Docker
+- Docker Compose
+- Lokal laufendes Traefik
+- Lokale Domain (z. B. `koelker.lan` via Pi-hole)
+
+---
+
+### Start local
+1. VPN nach Home verbinden für die lokale Domain
+2. Traefik starten:
 ```bash
-ng serve
+docker compose `
+  --env-file "C:\Repository\ServerSoftware\webserver-02\traefik\.env.local" `
+  -f "C:\Repository\ServerSoftware\webserver-02\traefik\compose.local.yml" `
+  up -d
+```
+3. Angular starten:
+```bash
+docker compose `
+  --env-file .env.local `
+  -f compose.local.yml `
+  up
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Die Website ist anschließend erreichbar unter:
 
-## Code scaffolding
+http://koelker.lan
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Hot Reload ist aktiv. Änderungen am Quellcode werden automatisch übernommen,
+ohne dass der Container neu gestartet werden muss.
+
+---
+
+### Stop local
+1. Angular stoppen:
+```bash
+docker compose `
+  --env-file .env.local `
+  -f compose.local.yml `
+  down
+```
+2. Traefik stoppen:
+```bash
+docker compose `
+  --env-file "C:\Repository\ServerSoftware\webserver-02\traefik\.env.local" `
+  -f "C:\Repository\ServerSoftware\webserver-02\traefik\compose.local.yml" `
+  down
+```
+3. VPN lösen
+
+---
+
+## Production Deployment (Build lokal, Upload per SCP)
+
+### Voraussetzungen
+
+- Lokal: Docker Engine
+- Server: Docker Engine + Docker Compose Plugin
+- Projektpfad auf dem Server: `/srv/koelker.tech`
+- Traefik läuft bereits auf dem Server
+
+---
+
+### 1) Image lokal bauen
+
+Im Projektverzeichnis:
 
 ```bash
-ng generate component component-name
+docker build `
+  -t koelker-tech:latest `
+  -t koelker-tech:$(git rev-parse --short HEAD) `
+  .
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Optionaler Test:
 
 ```bash
-ng generate --help
+docker run --rm koelker-tech:latest node -v
 ```
 
-## Building
+---
 
-To build the project run:
+### 2) Image exportieren und komprimieren
 
 ```bash
-ng build
+docker save koelker-tech:latest -o dist/koelker-tech.latest.tar
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+In Git Bash:
 
 ```bash
-ng test
+gzip dist/koelker-tech.latest.tar
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+### 3) Upload auf den Server
 
 ```bash
-ng e2e
+scp dist/koelker-tech.latest.tar.gz user@SERVER:/srv/koelker.tech/images/
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+### 4) Server: Image importieren
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+ssh user@SERVER
+cd /srv/koelker.tech/images
+gunzip koelker-tech.latest.tar.gz
+docker load -i koelker-tech.latest.tar
+rm koelker-tech.latest.tar
+```
+
+---
+
+### 5) Production starten
+
+```bash
+cd /srv/koelker.tech
+docker compose -f compose.yml --env-file .env.prod up -d
+```
+
+---
+
+### Production stoppen
+
+```bash
+docker compose -f compose.yml --env-file .env.prod down
+```
+
+---
+
+### Logs anzeigen
+
+```bash
+docker compose logs -f --tail=200 koelker-tech
+```
+
+---
+
+### Cleanup (optional)
+
+Alte, ungenutzte Images entfernen:
+
+```bash
+docker image prune -f
+```
