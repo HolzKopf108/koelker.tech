@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <clipPath id="capBox">
+      <rect x="0" y="32" width="256" height="192" />
+    </clipPath>
+  </defs>
+
+  <!-- Alles wird gemeinsam nach links verschoben -->
+  <g clip-path="url(#capBox)" transform="translate(-32, 0)">
+    <rect x="68" y="32" width="56" height="192" fill="#00a651" />
+
+    <circle cx="124" cy="108" r="20" fill="#00a651"/>
+
+    <path d="M 124 108 L 250 0"
+          fill="none"
+          stroke="#00a651"
+          stroke-width="56"
+          stroke-linecap="butt"
+          stroke-linejoin="miter"/>
+
+    <path d="M 124 108 L 232 250"
+          fill="none"
+          stroke="#00a651"
+          stroke-width="56"
+          stroke-linecap="butt"
+          stroke-linejoin="miter"/>
+  </g>
+</svg>

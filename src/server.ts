@@ -1,3 +1,4 @@
+// src/server.ts
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
