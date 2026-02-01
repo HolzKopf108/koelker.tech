@@ -3,6 +3,15 @@ import { Component, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 
+import {
+  SEO_DEFAULT_IMAGE,
+  SEO_DEFAULT_IMAGE_ALT,
+  SEO_DEFAULT_KEYWORDS,
+  SEO_SITE_NAME,
+  SEO_SITE_URL,
+} from '../seo/seo.constants';
+import { SeoService } from '../seo/seo.service';
+
 type RepoCard = {
   id: number;
   name: string;
@@ -18,6 +27,7 @@ type RepoCard = {
 })
 export class HomePage {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly seo = inject(SeoService);
 
   readonly email = 'linus.koelker@gmx.de';
 
@@ -28,6 +38,45 @@ export class HomePage {
   readonly copied = signal<boolean>(false);
 
   constructor() {
+    this.seo.update({
+      title: 'Linus Kölker | Softwareentwickler (Fullstack)',
+      description:
+        'Portfolio von Linus Kölker, Softwareentwickler mit Fokus auf Backend, Web, Clean Code, Architektur, Tests und Deployment.',
+      url: `${SEO_SITE_URL}/`,
+      image: SEO_DEFAULT_IMAGE,
+      imageAlt: SEO_DEFAULT_IMAGE_ALT,
+      keywords: SEO_DEFAULT_KEYWORDS,
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: SEO_SITE_NAME,
+        url: SEO_SITE_URL,
+        jobTitle: 'Softwareentwickler',
+        email: 'mailto:linus.koelker@gmx.de',
+        sameAs: [
+          'https://github.com/HolzKopf108',
+          'https://www.linkedin.com/in/linus-k%C3%B6lker-013a25258/',
+        ],
+        knowsAbout: [
+          'Backend',
+          'Webentwicklung',
+          'Java',
+          'Spring Boot',
+          'TypeScript',
+          'Angular',
+          'React',
+          'Next.js',
+          'Flutter',
+          'Docker',
+          'Clean Code',
+          'Architektur',
+          'Testbarkeit',
+          'Open Source',
+        ],
+        image: SEO_DEFAULT_IMAGE,
+      },
+    });
+
     // IMPORTANT: Only fetch in browser (avoid SSR doing self-fetch /api during render)
     if (isPlatformBrowser(this.platformId)) {
       void this.loadPinnedRepos();
