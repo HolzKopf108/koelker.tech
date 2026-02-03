@@ -37,7 +37,14 @@ docker compose `
   -f "C:\Repository\ServerSoftware\webserver-02\traefik\compose.local.yml" `
   up -d
 ```
-3. Angular starten:
+3. Start redis:
+```bash
+docker compose `
+  --env-file "C:\Repository\ServerSoftware\webserver-02\redis\.env.prod" `
+  -f "C:\Repository\ServerSoftware\webserver-02\redis\compose.yml" `
+  up -d
+```
+4. Angular starten:
 ```bash
 docker compose `
   --env-file .env.local `
@@ -62,14 +69,21 @@ docker compose `
   -f compose.local.yml `
   down
 ```
-2. Traefik stoppen:
+2. Stop redis:
+```bash
+docker compose `
+  --env-file "C:\Repository\ServerSoftware\webserver-02\redis\.env.prod" `
+  -f "C:\Repository\ServerSoftware\webserver-02\redis\compose.yml" `
+  down
+```
+3. Traefik stoppen:
 ```bash
 docker compose `
   --env-file "C:\Repository\ServerSoftware\webserver-02\traefik\.env.local" `
   -f "C:\Repository\ServerSoftware\webserver-02\traefik\compose.local.yml" `
   down
 ```
-3. VPN lösen
+4. VPN lösen
 
 ---
 
