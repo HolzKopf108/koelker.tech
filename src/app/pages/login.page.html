@@ -1,0 +1,54 @@
+<!-- src/app/pages/login.page.html -->
+<section class="login-panel animate-in flex min-h-[60vh] items-center justify-center">
+  <form class="card login-form space-y-6" (ngSubmit)="submit()">
+    <div>
+      <p class="text-xs font-semibold text-emerald-300">Admin</p>
+      <h1 class="mt-2 text-2xl font-semibold text-zinc-50">Login</h1>
+      <p class="mt-2 text-sm text-zinc-400">
+        Zugriff nur für den Adminbereich.
+      </p>
+    </div>
+
+    <div class="space-y-2">
+      <label class="text-xs uppercase tracking-wide text-zinc-400" for="login-username">Username</label>
+      <input
+        id="login-username"
+        name="username"
+        class="input lift press w-full"
+        type="text"
+        autocomplete="username"
+        required
+        [disabled]="loading()"
+        [(ngModel)]="username"
+      />
+    </div>
+
+    <div class="space-y-2">
+      <label class="text-xs uppercase tracking-wide text-zinc-400" for="login-password">Password</label>
+      <input
+        id="login-password"
+        name="password"
+        class="input lift press w-full"
+        type="password"
+        autocomplete="current-password"
+        required
+        [disabled]="loading()"
+        [(ngModel)]="password"
+      />
+    </div>
+
+    @if (error()) {
+      <div class="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+        {{ error() }}
+      </div>
+    }
+
+    <button class="btn-primary lift press w-full" type="submit" [disabled]="loading()">
+      @if (loading()) {
+        <span>Bitte warten…</span>
+      } @else {
+        <span>Einloggen</span>
+      }
+    </button>
+  </form>
+</section>

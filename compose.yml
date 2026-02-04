@@ -16,6 +16,7 @@ services:
       - traefik.http.services.koelker-tech.loadbalancer.server.port=4000
     networks:
       - web
+      - db
     logging:
       driver: local
       options:
@@ -24,4 +25,6 @@ services:
 
 networks:
   web:
+    external: true
+  db:
     external: true

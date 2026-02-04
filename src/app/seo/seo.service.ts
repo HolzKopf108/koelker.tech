@@ -22,11 +22,19 @@ type SeoConfig = {
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
+  private readonly meta: Meta;
+  private readonly title: Title;
+  private readonly document: Document;
+
   constructor(
-    private readonly meta: Meta,
-    private readonly title: Title,
-    @Inject(DOCUMENT) private readonly document: Document,
-  ) {}
+    meta: Meta,
+    title: Title,
+    @Inject(DOCUMENT) document: Document,
+  ) {
+    this.meta = meta;
+    this.title = title;
+    this.document = document;
+  }
 
   update(config: SeoConfig) {
     const siteName = config.siteName ?? SEO_SITE_NAME;

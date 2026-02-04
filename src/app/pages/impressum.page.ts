@@ -13,7 +13,7 @@ import { SeoService } from '../seo/seo.service';
   selector: 'app-impressum-page',
   templateUrl: './impressum.page.html',
 })
-export class ImpressumPage {
+export class ImpressumPageComponent {
   private readonly seo = inject(SeoService);
 
   constructor() {

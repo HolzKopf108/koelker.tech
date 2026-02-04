@@ -25,7 +25,7 @@ type RepoCard = {
   selector: 'app-home-page',
   templateUrl: './home.page.html',
 })
-export class HomePage {
+export class HomePageComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly seo = inject(SeoService);
 
@@ -99,8 +99,9 @@ export class HomePage {
 
       const data = (await res.json()) as RepoCard[];
       this.repos.set(data);
-    } catch (e: any) {
-      this.error.set(e?.message ?? 'Unknown error');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      this.error.set(message);
       this.repos.set([]);
     } finally {
       this.loading.set(false);

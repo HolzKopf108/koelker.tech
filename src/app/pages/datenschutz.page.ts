@@ -13,7 +13,7 @@ import { SeoService } from '../seo/seo.service';
   selector: 'app-datenschutz-page',
   templateUrl: './datenschutz.page.html',
 })
-export class DatenschutzPage {
+export class DatenschutzPageComponent {
   private readonly seo = inject(SeoService);
 
   constructor() {

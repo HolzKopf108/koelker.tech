@@ -111,6 +111,7 @@ app-root, body > app-root {
     transition: transform 200ms ease, border-color 200ms ease, background-color 200ms ease;
   }
   .lift:hover { transform: translateY(-2px); }
+  .press:active { transform: translateY(1px) scale(0.99); }
 
   /* cards */
   .card {
@@ -133,6 +134,72 @@ app-root, body > app-root {
     @apply inline-flex items-center justify-center rounded-xl border border-zinc-800/70 bg-zinc-900/20 px-4 py-2 text-sm font-semibold text-zinc-200;
   }
   .btn-ghost:hover { @apply border-zinc-700 bg-zinc-900/35; }
+  .btn-primary:disabled,
+  .btn-secondary:disabled,
+  .btn-ghost:disabled {
+    @apply cursor-not-allowed opacity-60;
+  }
+
+  .input {
+    @apply rounded-xl border border-zinc-800/70 bg-zinc-950/40 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500;
+  }
+  .input:focus {
+    @apply border-emerald-500/60 outline-none ring-2 ring-emerald-500/20;
+  }
+  .input:disabled {
+    @apply cursor-not-allowed opacity-60;
+  }
+
+  .select {
+    @apply rounded-xl border border-zinc-800/70 bg-zinc-950/40 px-3 py-2 text-sm text-zinc-100;
+    appearance: none;
+    padding-right: 2.25rem;
+  }
+  .select:focus {
+    @apply border-emerald-500/60 outline-none ring-2 ring-emerald-500/20;
+  }
+  .select-wrap {
+    position: relative;
+  }
+  .select-wrap::after {
+    content: "";
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 2px solid rgba(110, 231, 183, 0.9);
+    border-bottom: 2px solid rgba(110, 231, 183, 0.9);
+    transform: translateY(-50%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .chart-frame {
+    @apply h-64 rounded-xl border border-zinc-800/60 bg-zinc-950/40 p-3;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .chart-frame canvas {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+  }
+
+  .admin-panel,
+  .login-panel {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .admin-panel .card,
+  .login-panel .card {
+    max-width: 100%;
+  }
+  .login-form {
+    width: min(100%, 32rem);
+  }
 
   /* small pill */
   .pill {
@@ -183,4 +250,17 @@ app-root, body > app-root {
 @media (prefers-reduced-motion: reduce) {
   .animate-in, .stagger-1, .stagger-2, .stagger-3 { animation: none !important; }
   .lift { transition: none !important; }
+}
+
+@media (max-width: 520px) {
+  .chart-frame { height: 240px; padding: 0.75rem; }
+}
+
+@media (max-width: 360px) {
+  .admin-panel .card,
+  .login-panel .card {
+    padding: 1rem;
+  }
+  .chart-frame { height: 210px; padding: 0.5rem; }
+  .select { font-size: 0.75rem; padding-top: 0.4rem; padding-bottom: 0.4rem; }
 }

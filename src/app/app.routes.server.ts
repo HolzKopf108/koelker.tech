@@ -5,6 +5,10 @@ export const serverRoutes: ServerRoute[] = [
   // Home: echtes SSR (pro Request)
   { path: '', renderMode: RenderMode.Server },
 
+  // Admin: SSR, aber serverseitig geschützt
+  { path: 'login', renderMode: RenderMode.Server },
+  { path: 'admin', renderMode: RenderMode.Server },
+
   // Legal: kann stabil prerendered werden
   { path: 'impressum', renderMode: RenderMode.Prerender },
   { path: 'datenschutz', renderMode: RenderMode.Prerender },

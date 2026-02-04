@@ -1,11 +1,12 @@
 services:
   koelker-tech_local:
-    image: node:24-bookworm
+    image: node:20-bookworm
     container_name: koelker-tech_local
     working_dir: /app
     command: >
       sh -lc "
         [ -f .docker-npm.stamp ] || (
+          npm install -g npm@11.6.4 &&
           npm ci --prefer-offline --no-audit --loglevel=warn &&
           touch .docker-npm.stamp
         );
@@ -29,6 +30,7 @@ services:
       - traefik.http.services.koelker-tech_local.loadbalancer.server.port=4000
     networks:
       - web
+      - db
     logging:
       driver: local
       options:
@@ -40,4 +42,6 @@ volumes:
 
 networks:
   web:
+    external: true
+  db:
     external: true
